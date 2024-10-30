@@ -1,48 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=<inp, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Pisos e Azulejos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>Calculadora AJAX</h1>
 
-    <pre>
-    <label>Numero 01</label>
-    <input type="text" name="numero1" id="numero1"/>
+    <h1>Calculadora de Pisos e Azulejos</h1>
+    
+    <label for="largura">Largura do cômodo (em metros):</label>
+    <input type="number" id="largura" placeholder="Ex: 4" required>
 
-    <label>Numero 02</label>
-    <input type="text" name="numero2" id="numero2"/>
+    <label for="comprimento">Comprimento do cômodo (em metros):</label>
+    <input type="number" id="comprimento" placeholder="Ex: 5" required>
 
-    <button onclick="calcular();">Calcular com ajax</button>
+    <label for="tamanho">Tamanho do piso/azulejo (em metros quadrados):</label>
+    <input type="number" id="tamanho" placeholder="Ex: 0.36 (para 60x60cm)" required>
 
-    <p id="resultado"></p>
-    </pre>
+    <label for="margem">Porcentagem de margem extra (opcional):</label>
+    <input type="number" id="margem" placeholder="Ex: 10" min="0" max="100>
+
+    <button onclick="calcular()">Calcular</button>
+
+    <h2 id="resultado"></h2>
+
     <script>
-        function calcular(){
-            const numero1 = document.getElementById("numero1").value;
-            const numero2 = document.getElementById("numero2").value;
+        function calcular() {
+            const largura = parseFloat(document.getElementById('largura').value);
+            const comprimento = parseFloat(document.getElementById('comprimento').value);
+            const tamanho = parseFloat(document.getElementById('tamanho').value);
+            const margem = parseFloat(document.getElementById('margem').value) || 0;
 
-            fetch('/calculo.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    numero1: parseFloat(numero1),
-                    numero2: parseFloat(numero2)                
-                })
-            })
-            .then(resposta => resposta.json())
-            .then(dados =>{
+            const areaCômodo = largura * comprimento;
+            const quantidadePisos = areaCômodo / tamanho;
+            const quantidadeComMargem = quantidadePisos * (1 + margem / 100);
 
-                document.getElementById("resultado").innerHTML = 
-                    "Soma: " + dados.soma;
-            })
-            .catch(erro =>{
-                document.getElementById("resultado").innerHTML = 
-                "Erro ao processar";
-            });
+            document.getElementById('resultado').innerText = 
+                Você precisará de aproximadamente ${Math.ceil(quantidadeComMargem)} pisos/azulejos.;
         }
     </script>
+
 </body>
 </html>
